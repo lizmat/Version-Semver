@@ -26,7 +26,7 @@ say $left < $right;    # True
 DESCRIPTION
 ===========
 
-The `Version::Semver` distribution provides a `Version::Semver` class that encapsulates the logic for creating a `Version`-like object with semantics matching the [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html) standard.
+The `Version::Semver` distribution provides a `Version::Semver` class which encapsulates the logic for creating a `Version`-like object with semantics matching the [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html) standard.
 
 INSTANTIATION
 =============

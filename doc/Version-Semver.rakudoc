@@ -24,7 +24,7 @@ say $left < $right;    # True
 =head1 DESCRIPTION
 
 The C<Version::Semver> distribution provides a C<Version::Semver>
-class that encapsulates the logic for creating a C<Version>-like
+class which encapsulates the logic for creating a C<Version>-like
 object with semantics matching the
 L<Semantic Versioning 2.0.0|https://semver.org/spec/v2.0.0.html>
 standard.
