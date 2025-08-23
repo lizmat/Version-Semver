@@ -1,0 +1,33 @@
+{
+  "auth": "zef:lizmat",
+  "authors": [
+    "Elizabeth Mattijsen"
+  ],
+  "build-depends": [
+  ],
+  "depends": [
+  ],
+  "description": "Implement Semantic Version logic",
+  "license": "Artistic-2.0",
+  "name": "Version::Semver",
+  "provides": {
+    "Version::Semver": "lib/Version/Semver.rakumod"
+  },
+  "raku": "6.d",
+  "resources": [
+  ],
+  "source-url": "https://github.com/lizmat/Version-Semver.git",
+  "support": {
+    "bugtracker": "https://github.com/lizmat/Version-Semver/issues",
+    "email": "liz@raku.rocks",
+    "source": "https://github.com/lizmat/Version-Semver.git"
+  },
+  "tags": [
+    "VERSION",
+    "SEMANTIC",
+    "SEMVER"
+  ],
+  "test-depends": [
+  ],
+  "version": "0.0.1"
+}
