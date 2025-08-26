@@ -3,7 +3,7 @@ use Version::Semver;
 
 # These tests need to be in ascending order
 my @tests = 
-  "0.0.0-1",           0, 0, 0, (1,),      (),
+  "0.0.0-1",          0, 0, 0, (1,),      (),
   "0.0.0-2",           0, 0, 0, (2,),      (),
   "0.0.0-bar",         0, 0, 0, ("bar",),  (),
   "0.0.0-foo",         0, 0, 0, ("foo",),  (),
@@ -18,7 +18,7 @@ my @tests =
   "2.0.2-zip+foo.bar", 2, 0, 2, ("zip",),  <foo bar>,
 ;
 
-plan 2 * (@tests / 6) + 10;
+plan 2 * (@tests / 6) + 11;
 
 my @versions;
 for @tests -> $spec, $major, $minor, $patch, @pre-release, @build {
@@ -122,6 +122,9 @@ for @versions.skip -> $right {
         is-deeply $right.">="($left), True,  'does .>= with prev give False';
     }
 }
+
+is Version::Semver.new("v1.0.0"), Version::Semver.new("1.0.0"),
+  'is leading "v" ignored';
 
 throws-like { Version::Semver.new("") }, X::AdHoc,
   message => "Version can not be empty";
