@@ -1,6 +1,9 @@
 Revision history for Version::Semver
 
 {{$NEXT}}
+    - Allow "v" as prefix for semver 1.0 compatibility
+    - Add :include-build named argument to make the build part
+      significant with regards to comparisons
 
 0.0.1  2025-08-23T22:13:34+02:00
     - Initial version

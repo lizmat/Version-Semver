@@ -1,0 +1,36 @@
+use Test;
+use Version::Semver;
+
+# nib = no include-build, ib = include-build
+my @tests = 
+# left      right  nibib  ibnib  ibib
+  "+foo",      "", Same,  More,  More,
+  "",      "+bar", Less,  Same,  Less,
+  "+foo",  "+bar", Less,  More,  More,
+  "+bar",  "+foo", Less,  More,  Less,
+;
+
+plan @tests / 5;
+
+for @tests -> $left, $right, $nibib, $ibnib, $ibib {
+    subtest "Testing '{$left || ""}' cmp '{$right || ""}'" => {
+        plan 8;
+
+        my $svlnib = Version::Semver.new("0.0.0$left");
+        isa-ok $svlnib, Version::Semver;
+        my $svlib  = Version::Semver.new("0.0.0$left", :include-build);
+        isa-ok $svlib, Version::Semver;
+        my $svrnib = Version::Semver.new("0.0.0$right");
+        isa-ok $svrnib, Version::Semver;
+        my $svrib  = Version::Semver.new("0.0.0$right", :include-build);
+        isa-ok $svrib, Version::Semver;
+
+
+        is-deeply $svlnib.cmp($svrnib), Same,   'nib.cmp(nib)';
+        is-deeply $svlnib.cmp($svrib),  $nibib, 'nib.cmp( ib)';
+        is-deeply $svlib.cmp( $svrnib), $ibnib, ' ib.cmp(nib)';
+        is-deeply $svlib.cmp( $svrib),  $ibib,  ' ib.cmp( ib)';
+    }
+}
+
+# vim: expandtab shiftwidth=4

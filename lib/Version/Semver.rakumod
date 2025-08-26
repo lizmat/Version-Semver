@@ -1,13 +1,16 @@
 #- Version::Semver -----------------------------------------------------------
-class Version::Semver:ver<0.0.1>:auth<zef:lizmat> {
+class Version::Semver:ver<0.0.2>:auth<zef:lizmat> {
     has UInt $.major is required;
     has UInt $.minor is required;
     has UInt $.patch is required;
     has      @.pre-release is List;
     has      @.build       is List;
+    has Bool $.include-build = False;
 
     multi method new(Version::Semver: Str:D $spec is copy) {
-        my %args;
+        my %args = %_;
+
+        $spec .= substr(1) if $spec.starts-with("v");  # semver 1.0 compat
 
         # Generic pre-release / build parsing logic
         my sub parse($index, $type --> Nil) {
@@ -67,24 +70,45 @@ class Version::Semver:ver<0.0.1>:auth<zef:lizmat> {
         $!major cmp $other.major
           || $!minor cmp $other.minor
           || $!patch cmp $other.patch
-          || self!compare-pre-release($other)
+          || self!compare-non-version(
+               @!pre-release, $other.pre-release, Less
+             )
+          || ($other.include-build
+               ?? $!include-build
+                 ?? self!compare-non-version(
+                      @!build, $other.build, More
+                    )
+                 !! ($other.build ?? Less !! Same)  
+               !! $!include-build
+                 ?? @!build ?? More !! Same
+                 !! Same)
     }
 
     method eqv(Version::Semver:D: Version::Semver:D $other) {
         $!major eqv $other.major
           && $!minor eqv $other.minor
           && $!patch eqv $other.patch
-          && self!compare-pre-release($other) == Same
+          && self!compare-non-version(
+               @!pre-release, $other.pre-release, Less
+             ) == Same
+          && ($other.include-build
+               ?? $!include-build
+                 ?? self!compare-non-version(
+                      @!build, $other.build, More
+                    ) == Same
+                 !! !$other.build  
+               !! $!include-build
+                 ?? ?@!build
+                 !! True)
     }
 
-    method !compare-pre-release($other) {
-        my @rights := $other.pre-release;
+    method !compare-non-version(@lefts, @rights, $default) {
 
-        # at least one pre-release on the right
+        # at least one piece of data on the right
         if @rights {
 
             # at least one on left
-            if @!pre-release -> @lefts {
+            if @lefts {
                 my int $i;
                 for @lefts -> $left {
                     with @rights[$i++] -> $right {
@@ -94,7 +118,7 @@ class Version::Semver:ver<0.0.1>:auth<zef:lizmat> {
                             }
                         }
                         else {
-                            return $left ~~ Int ?? Less !! More
+                            return $left ~~ Int ?? $default !! More
                         }
                     }
                     else {
@@ -103,18 +127,18 @@ class Version::Semver:ver<0.0.1>:auth<zef:lizmat> {
                 }
 
                 # right not exhausted yet?
-                $i <= @rights.end ?? Less !! Same
+                $i <= @rights.end ?? $default !! Same
             }
 
-            # pre-release right, not on left
+            # data right, not on left
             else {
-                More
+                $default == Less ?? More !! Less
             }
         }
 
         # no pre-release on right
         else {
-            @!pre-release ?? Less !! Same
+            @lefts ?? $default !! Same
         }
     }
 

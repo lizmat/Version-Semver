@@ -32,12 +32,16 @@ INSTANTIATION
 =============
 
 ```raku
-use Version::Semver;
-
 my $sv = Version::Semver.new("1.2.3-pre.release+build.data");
 ```
 
 The basic instantion of a `Version::Semver` object is done with the `new` method, taking the version string as a positional argument.
+
+```raku
+my $svb = Version::Semver.new("1.2.3+build.data", :include-build);
+```
+
+By default, any "build" expression (any parts after the "+") will be ignored during comparisons. If specified with a true value, then **any** "build" expression **will** be included in any comparisons with the same semantics as the "pre-release" information, but with a reversed result if either side does not have a "build" expression.
 
 ACCESSORS
 =========

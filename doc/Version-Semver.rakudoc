@@ -32,13 +32,21 @@ standard.
 =head1 INSTANTIATION
 
 =begin code :lang<raku>
-use Version::Semver;
-
 my $sv = Version::Semver.new("1.2.3-pre.release+build.data");
 =end code
 
 The basic instantion of a C<Version::Semver> object is done with
 the C<new> method, taking the version string as a positional argument.
+
+=begin code :lang<raku>
+my $svb = Version::Semver.new("1.2.3+build.data", :include-build);
+=end code
+
+By default, any "build" expression (any parts after the "+") will be
+ignored during comparisons.  If specified with a true value, then B<any>
+"build" expression B<will> be included in any comparisons with the
+same semantics as the "pre-release" information, but with a reversed
+result if either side does not have a "build" expression.
 
 =head1 ACCESSORS
 
